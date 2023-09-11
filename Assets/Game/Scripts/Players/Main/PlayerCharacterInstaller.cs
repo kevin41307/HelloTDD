@@ -1,16 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Game.Scripts.Players.Handlers;
 using Zenject;
 
-namespace Assets.Game.Scripts.Players.Main
+namespace Game.Scripts.Players.Main
 {
     public class PlayerCharacterInstaller : MonoInstaller
     {
 
         public override void InstallBindings()
         {
-
+            Container.Bind<PlayerInputState>().AsSingle(); 
+            Container.BindInterfacesTo<PlayerInputHandler>().AsSingle();
+            Container.BindInterfacesTo<PlayerMoveHandler>().AsSingle();
+                     
+            Container.BindExecutionOrder<PlayerInputHandler>(-10000);
         }
     }
 }
