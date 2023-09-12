@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Game.Scripts.Battle.Misc;
 using Game.Scripts.Players.Handlers;
 using Game.Scripts.Players.Main;
 using NSubstitute;
@@ -14,9 +15,10 @@ public class PlayerCharacterTests : TestFixture_DI_Log
     {
         //Container.Bind<PlayerCharacter>().FromNewComponentOnNewGameObject().AsSingle();
         //var playerCharacter = Container.Resolve<PlayerCharacter>();
-        
+   
         var trans = new GameObject().transform;
-        var player = new Player(trans.transform);
+        var player = new PlayerMover(trans.transform);
+        var x = Container.Bind<PlayerMover>().FromInstance(player);
 
         var inputState = BindAndResolve<PlayerInputState>();
         var timeProvider = BindMockAndResolve<IDeltaTimeProvider>();
@@ -30,5 +32,7 @@ public class PlayerCharacterTests : TestFixture_DI_Log
         Debug.Log("GetDeltaTime" + timeProvider.GetDeltaTime());
 
         player.Trans.ShouldTransformPositionBe(10, 10);
+        moveHandler.Tick();
+        player.Trans.ShouldTransformPositionBe(20, 20);
     }
 }

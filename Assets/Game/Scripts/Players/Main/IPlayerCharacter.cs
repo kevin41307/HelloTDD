@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace Game.Scripts.Players.Main
 {
-    public interface IPlayerCharacter
+    public interface IPlayerMover
     {
         public float MoveSpeed { get; set; }
 
@@ -11,9 +11,9 @@ namespace Game.Scripts.Players.Main
 
     }
 
-    public class Player : IPlayerCharacter
+    public class PlayerMover : IPlayerMover
     {
-        public Player(Transform playerCharacter)
+        public PlayerMover(Transform playerCharacter)
         {
             Trans = playerCharacter;
         }
