@@ -8,6 +8,8 @@ namespace Game.Scripts.Players.Main
         public float Horizontal { get; private set; }
         public float Vertical { get; private set; }
         public Vector2 MoveDirection => new Vector2(Horizontal, Vertical);
+
+        public bool isLocked = false;
         public void SetHorizontal(float horizontal)
         {
             this.Horizontal = horizontal;

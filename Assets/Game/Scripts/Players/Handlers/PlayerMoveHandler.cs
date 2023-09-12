@@ -26,6 +26,7 @@ namespace Game.Scripts.Players.Handlers
 
         public void Tick()
         {
+            if(inputState.isLocked) return;
             var movement = CalMovement();
             var newPos = mover.GetPos() + movement;
             mover.SetPos( newPos );
