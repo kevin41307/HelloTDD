@@ -27,7 +27,8 @@ namespace Game.Scripts.Players.Handlers
         public void Tick()
         {
             var movement = CalMovement();
-            mover.SetPos(mover.GetPos() + movement );
+            var newPos = mover.GetPos() + movement;
+            mover.SetPos( newPos );
         }
     }
 }

@@ -27,11 +27,8 @@ public class PlayerCharacterTests : TestFixture_DI_Log
         var timeProvider = BindMockAndResolve<IDeltaTimeProvider>();
         timeProvider.GetDeltaTime().Returns(10);
 
-        //var moveHandler =  BindAndResolve<PlayerMoveHandler>()
         Container.Bind<PlayerMoveHandler>().AsSingle().WithArguments(mover);
         var moveHandler = Resolve<PlayerMoveHandler>();
-
-        //moveHandler.mover = mover;
 
         var movement = moveHandler.CalMovement();
         Debug.Log("movement" + movement);

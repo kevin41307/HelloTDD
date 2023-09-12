@@ -10,7 +10,6 @@ namespace Game.Scripts.Players.Main
         {
             Container.Bind<PlayerInputState>().AsSingle(); 
             Container.BindInterfacesTo<PlayerInputHandler>().AsSingle();
-            //Container.Bind<IPlayerMover>().AsSingle().WithArguments(this.GetComponent<IPlayerMover>());
             Container.BindInterfacesTo<PlayerMoveHandler>().AsSingle().WithArguments(GetComponent<IPlayerMover>());
                      
             Container.BindExecutionOrder<PlayerInputHandler>(-10000);

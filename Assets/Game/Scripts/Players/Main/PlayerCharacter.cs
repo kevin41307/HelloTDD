@@ -5,7 +5,9 @@ namespace Game.Scripts.Players.Main
     public class PlayerCharacter : MonoBehaviour, IPlayerMover
     {
         public Transform Trans { get => transform; }
-        public float MoveSpeed { get ; set; } = 50f;
+
+        [Inject(Id = "MoveSpeed")]
+        public float MoveSpeed { get ; set; } 
 
         public Vector2 GetPos()
         {
