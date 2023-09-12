@@ -16,23 +16,29 @@ public class PlayerCharacterTests : TestFixture_DI_Log
         //Container.Bind<PlayerCharacter>().FromNewComponentOnNewGameObject().AsSingle();
         //var playerCharacter = Container.Resolve<PlayerCharacter>();
    
-        var trans = new GameObject().transform;
-        var player = new PlayerMover(trans.transform);
-        var x = Container.Bind<PlayerMover>().FromInstance(player);
-
+        var player = new GameObject().transform;
+        var mover = BindMockAndResolve<IPlayerMover>();
+        mover.GetPos().Returns((Vector2)player.transform.position);
+        mover.MoveSpeed = 1;
+        
         var inputState = BindAndResolve<PlayerInputState>();
+        inputState.SetMoveDirection(1, 1);
+
         var timeProvider = BindMockAndResolve<IDeltaTimeProvider>();
         timeProvider.GetDeltaTime().Returns(10);
-        var moveHandler = BindAndResolve<PlayerMoveHandler>();
-        moveHandler.character = player;
 
-        inputState.SetMoveDirection(1, 1);
-        moveHandler.Tick();
-        Debug.Log("MoveDirection" + inputState.MoveDirection);
-        Debug.Log("GetDeltaTime" + timeProvider.GetDeltaTime());
+        //var moveHandler =  BindAndResolve<PlayerMoveHandler>()
+        Container.Bind<PlayerMoveHandler>().AsSingle().WithArguments(mover);
+        var moveHandler = Resolve<PlayerMoveHandler>();
 
-        player.Trans.ShouldTransformPositionBe(10, 10);
+        //moveHandler.mover = mover;
+
+        var movement = moveHandler.CalMovement();
+        Debug.Log("movement" + movement);
+        mover.When(x => x.SetPos(movement)).Do(x => {player.position += (Vector3)movement; });
         moveHandler.Tick();
-        player.Trans.ShouldTransformPositionBe(20, 20);
+        player.ShouldTransformPositionBe(10, 10);
+        moveHandler.Tick();
+        player.ShouldTransformPositionBe(20, 20);
     }
 }

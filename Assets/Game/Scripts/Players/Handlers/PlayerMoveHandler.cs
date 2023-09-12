@@ -7,26 +7,27 @@ namespace Game.Scripts.Players.Handlers
 {
     public class PlayerMoveHandler : ITickable
     {
-        public PlayerMover character;
+        private readonly IPlayerMover mover;
+        public PlayerMoveHandler(IPlayerMover mover)
+        {
+            this.mover = mover;
+        }
 
-        [Inject] public PlayerInputState inputState;
+        [Inject] PlayerInputState inputState;
 
-        [Inject] public IDeltaTimeProvider deltaTimeProvider;
+        [Inject] IDeltaTimeProvider deltaTimeProvider;
 
         public Vector2 CalMovement()
         {
             var x = deltaTimeProvider.GetDeltaTime();
-            var y = character.MoveSpeed;
+            var y = mover.MoveSpeed;
             return x * y * inputState.MoveDirection; 
         }
 
         public void Tick()
         {
             var movement = CalMovement();
-            Debug.Log("movement" + movement);
-            Debug.Log("playerCharacter.GetPosAA" + character.GetPos());
-            character.SetPos(character.GetPos() + movement );
-            Debug.Log("playerCharacter.GetPosBB" + character.GetPos());
+            mover.SetPos(mover.GetPos() + movement );
         }
     }
 }

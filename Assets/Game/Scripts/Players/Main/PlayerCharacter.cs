@@ -2,19 +2,21 @@ using UnityEngine;
 using Zenject;
 namespace Game.Scripts.Players.Main
 {
-    public class PlayerCharacter : MonoBehaviour
+    public class PlayerCharacter : MonoBehaviour, IPlayerMover
     {
-        private IPlayerMover player;
+        public Transform Trans { get => transform; }
+        public float MoveSpeed { get ; set; } = 50f;
 
-        public IPlayerMover Player
+        public Vector2 GetPos()
         {
-            get 
-            {
-                if (player == null) player = new PlayerMover(this.transform);
-                return player;
-            }
+            return Trans.position;
         }
-        
+
+        public void SetPos(Vector2 newPos)
+        {
+            Trans.position = newPos;
+        }
+
     }
 
 }
