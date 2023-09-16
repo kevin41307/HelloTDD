@@ -21,7 +21,7 @@ namespace Game.Scripts.Players.Handlers
         {
             var x = deltaTimeProvider.GetDeltaTime();
             var y = mover.MoveSpeed;
-            return x * y * inputState.MoveDirection; 
+            return x * y * inputState.MoveDirection ; 
         }
 
         public void Tick()
