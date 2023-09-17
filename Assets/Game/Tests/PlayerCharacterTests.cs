@@ -28,17 +28,18 @@ public class PlayerCharacterTests : TestFixture_DI_Log
         var inputState = BindAndResolve<PlayerInputState>();
         inputState.SetMoveDirection(1, 1);
 
+        IStateEvaluator stateEvaluator = BindMockAndResolve<IStateEvaluator>();
+        stateEvaluator.Evaluate(new List<IAction>()).Returns(true);
+
         var press = BindAndResolve<UserPressPauseAction>();
         var pauseState = BindAndResolve<GamePauseState>();
         pauseState.Setup();
+        pauseState.evaluator = stateEvaluator;
 
         pauseState.actions.ForEach(action => Debug.Log(action) );
         Debug.Log("Evaluate()" + pauseState.Evaluate());
 
-        //IStateEvaluator stateEvaluator = BindMockAndResolve<IStateEvaluator>();
-        //pauseState.evaluator = stateEvaluator;
 
-        //stateEvaluator.Evaluate(pauseState.actions).Returns(false);
         //Container.Bind<GamePauseState>().FromInstance(pauseState);
 
         var player = playerCharacter.Trans;
@@ -71,18 +72,22 @@ public class PlayerCharacterTests : TestFixture_DI_Log
         float MoveSpeed = 1;
         Container.Bind<float>().WithId("MoveSpeed").FromInstance(MoveSpeed);
         var playerCharacter = Container.Resolve<PlayerCharacter>();
+        var player = playerCharacter.Trans;
 
         var inputState = BindAndResolve<PlayerInputState>();
         inputState.SetMoveDirection(1, 1);
 
+        IStateEvaluator stateEvaluator = BindMockAndResolve<IStateEvaluator>();
+
         var press = BindAndResolve<UserPressPauseAction>();
         var pauseState = BindAndResolve<GamePauseState>();
         pauseState.Setup();
+        pauseState.evaluator = stateEvaluator;
+        stateEvaluator.Evaluate(pauseState.actions).Returns(false);
+    
 
         pauseState.actions.ForEach(action => Debug.Log(action) );
         Debug.Log("Evaluate()" + pauseState.Evaluate());
-
-        var player = playerCharacter.Trans;
 
         var timeProvider = BindMockAndResolve<IDeltaTimeProvider>();
         timeProvider.GetDeltaTime().Returns(10);
@@ -99,14 +104,15 @@ public class PlayerCharacterTests : TestFixture_DI_Log
         player.ShouldTransformPositionBe(30, 30);
         //GamePause
         
-        //pauser.Evaluate().Returns(true);
-        inputState.isPressPauseBtn = true;
+        stateEvaluator.Evaluate(pauseState.actions).Returns(true);
+        //inputState.isPressPauseBtn = true;
         moveHandler.Tick();  
         moveHandler.Tick();  
         player.ShouldTransformPositionBe(30, 30);
         
         //GamePause
-        inputState.isPressPauseBtn = false;
+        stateEvaluator.Evaluate(pauseState.actions).Returns(false);
+        //inputState.isPressPauseBtn = false;
         moveHandler.Tick();   
         player.ShouldTransformPositionBe(40, 40);
 

@@ -7,5 +7,4 @@ namespace Game.Scripts.Misc
     {
         public bool Act();  
     }
-    
 }

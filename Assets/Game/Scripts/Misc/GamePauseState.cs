@@ -8,7 +8,6 @@ namespace Game.Scripts.Misc
     {
         [Inject] UserPressPauseAction userPressPauseAction;
 
-
         public override void Setup()
         {
             actions.Add(userPressPauseAction);

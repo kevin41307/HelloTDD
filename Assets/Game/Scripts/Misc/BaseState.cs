@@ -9,13 +9,13 @@ namespace Game.Scripts.Misc
     {
         public List<IAction> actions = new List<IAction>();
 
-        //[Inject] public IStateEvaluator evaluator {set; get;}
+        [Inject] public IStateEvaluator evaluator {set; get;}
 
         public abstract void Setup();
 
-        public virtual bool Evaluate()
+        public bool Evaluate()
         {
-            return Or();
+            return evaluator.Evaluate(actions);
         }
         protected bool Or(bool defaultValue = false)
         {
