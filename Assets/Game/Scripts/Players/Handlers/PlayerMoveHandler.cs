@@ -3,9 +3,10 @@ using Game.Scripts.Players.Main;
 using NSubstitute;
 using UnityEngine;
 using Zenject;
+using Game.Scripts.Misc;
 namespace Game.Scripts.Players.Handlers
 {
-    public class PlayerMoveHandler : ITickable
+    public class PlayerMoveHandler : ITickable, IStateController
     {
         private readonly IPlayerMover mover;
         public PlayerMoveHandler(IPlayerMover mover)
@@ -17,6 +18,9 @@ namespace Game.Scripts.Players.Handlers
 
         [Inject] IDeltaTimeProvider deltaTimeProvider;
 
+        [Inject(Id = "GamePauseState")] IBaseState gamePauseState;
+
+
         public Vector2 CalMovement()
         {
             var x = deltaTimeProvider.GetDeltaTime();
@@ -26,7 +30,7 @@ namespace Game.Scripts.Players.Handlers
 
         public void Tick()
         {
-            if(inputState.isLocked) return;
+            if(gamePauseState.Evaluate()) return;
             var movement = CalMovement();
             var newPos = mover.GetPos() + movement;
             mover.SetPos( newPos );

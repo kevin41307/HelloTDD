@@ -9,7 +9,7 @@ namespace Game.Scripts.Players.Main
         public float Vertical { get; private set; }
         public Vector2 MoveDirection => new Vector2(Horizontal, Vertical);
 
-        public bool isLocked = false;
+        public bool isPressPauseBtn = false;
         public void SetHorizontal(float horizontal)
         {
             this.Horizontal = horizontal;

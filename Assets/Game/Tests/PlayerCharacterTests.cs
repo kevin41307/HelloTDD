@@ -8,6 +8,7 @@ using rStarUtility.Generic.TestExtensions;
 using rStarUtility.Generic.TestFrameWork;
 using UnityEngine;
 using Zenject;
+using Game.Scripts.Misc;
 public class PlayerCharacterTests : TestFixture_DI_Log
 {
     [Test]
@@ -18,6 +19,9 @@ public class PlayerCharacterTests : TestFixture_DI_Log
         Container.Bind<float>().WithId("MoveSpeed").FromInstance(MoveSpeed);
         var playerCharacter = Container.Resolve<PlayerCharacter>();
 
+        var GamePauseState = ScriptableObject.CreateInstance<BaseState>();
+        Container.Bind<IBaseState>().WithId("GamePauseState").FromInstance(GamePauseState);
+        
         var player = playerCharacter.Trans;
         //playerCharacter.MoveSpeed = 1;
         //var player = new GameObject().transform;
@@ -46,39 +50,48 @@ public class PlayerCharacterTests : TestFixture_DI_Log
     }
 
     [Test]
-    public void LockInput()
+    public void GamePause()
     {
-        var player = new GameObject().transform;
-        var mover = BindMockAndResolve<IPlayerMover>();
-        var startPos = Vector3.zero;
-        player.transform.position = startPos;
-        mover.GetPos().Returns((Vector2)player.transform.position);
-        mover.MoveSpeed = 1;
-        
+        Container.Bind<PlayerCharacter>().FromNewComponentOnNewGameObject().AsSingle();
+        float MoveSpeed = 1;
+        Container.Bind<float>().WithId("MoveSpeed").FromInstance(MoveSpeed);
+        var playerCharacter = Container.Resolve<PlayerCharacter>();
+
+
+        var player = playerCharacter.Trans;
+
         var inputState = BindAndResolve<PlayerInputState>();
         inputState.SetMoveDirection(1, 1);
 
         var timeProvider = BindMockAndResolve<IDeltaTimeProvider>();
         timeProvider.GetDeltaTime().Returns(10);
 
-        Container.Bind<PlayerMoveHandler>().AsSingle().WithArguments(mover);
+        var stateController = BindMockAndResolve<IStateController>();
+        var pauser = BindMockAndResolve<IBaseState>();
+        pauser.Evaluate().Returns(false);
+        Container.Bind<IBaseState>().WithId("GamePauseState").FromInstance(pauser);
+
+        //Container.Bind<PlayerMoveHandler>().AsSingle().WithArguments(mover);
+        Container.Bind<PlayerMoveHandler>().AsSingle().WithArguments(playerCharacter);
         var moveHandler = Resolve<PlayerMoveHandler>();
 
-        var movement = moveHandler.CalMovement();
-        Debug.Log("movement" + movement);
-        mover.When(x => x.SetPos(movement)).Do(x => {player.position += (Vector3)movement; });
-        
+        player.ShouldTransformPositionBe(0, 0);
         moveHandler.Tick();   
         player.ShouldTransformPositionBe(10, 10);
 
-        //LockInput
-        inputState.isLocked = true;
-        player.ShouldTransformPositionBe(10, 10);
+        moveHandler.Tick();  
+        moveHandler.Tick();  
+        player.ShouldTransformPositionBe(30, 30);
+        //GamePause
+        pauser.Evaluate().Returns(true);
+        moveHandler.Tick();  
+        moveHandler.Tick();  
+        player.ShouldTransformPositionBe(30, 30);
         
-        //UnLockInput
-        inputState.isLocked = false;
+        //GamePause
+        pauser.Evaluate().Returns(false);
         moveHandler.Tick();   
-        player.ShouldTransformPositionBe(20, 20);
+        player.ShouldTransformPositionBe(40, 40);
 
     }
 }
