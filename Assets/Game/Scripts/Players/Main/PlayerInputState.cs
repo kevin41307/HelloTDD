@@ -25,5 +25,6 @@ namespace Game.Scripts.Players.Main
             SetHorizontal(horizontal);
             SetVertical(vertical);
         }
+
     }
 }

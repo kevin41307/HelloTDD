@@ -1,16 +1,18 @@
 
 using Game.Scripts.Players.Main;
 using UnityEngine;
+using Zenject;
 
 namespace Game.Scripts.Misc
 {
-    [CreateAssetMenu(fileName = "New Action", menuName = "Pluggable/Action")]
-    public class UserPressPauseAction : Action
+    public class UserPressPauseAction : IAction
     {
-        PlayerInputState inputState;
-        public override bool Act(IStateController stateController)
+        [Inject] PlayerInputState inputState;
+        public bool Act()
         {
+            Debug.Log("inputState.Horizontal" + inputState.Horizontal);
             return inputState.isPressPauseBtn;
         }
+
     }
 }

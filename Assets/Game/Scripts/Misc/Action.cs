@@ -3,8 +3,9 @@ using UnityEngine;
 
 namespace Game.Scripts.Misc
 {
-    public abstract class Action : ScriptableObject
+    public interface IAction 
     {
-        public abstract bool Act(IStateController stateController);  
+        public bool Act();  
     }
+    
 }
