@@ -1,5 +1,3 @@
-
-using Game.Scripts.Misc.Datas;
 using UnityEngine;
 using Zenject;
 

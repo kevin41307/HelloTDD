@@ -26,8 +26,8 @@ public class PlayerCharacterTests : TestFixture_DI_Log
         var inputState = BindAndResolve<PlayerInputState>();
         inputState.SetMoveDirection(1, 1);
 
-        var stateEvaluator = Substitute.For<IStateEvaluator>();
-        Container.BindInstance(stateEvaluator);
+        var pauseStateEvaluator = Substitute.For<IStateEvaluator>();
+        Container.BindInstance(pauseStateEvaluator);
         /*
         var press = BindAndResolve<UserPressPauseAction>();
         var pauseState = BindAndResolve<GamePauseState>();
@@ -42,7 +42,7 @@ public class PlayerCharacterTests : TestFixture_DI_Log
         Container.Bind<PlayerMoveHandler>().AsSingle().WithArguments(playerCharacter);
         var moveHandler = Container.Resolve<PlayerMoveHandler>();
 
-        stateEvaluator.Evaluate().Returns(false);
+        pauseStateEvaluator.Evaluate().Returns(false);
         moveHandler.Tick();
         playerCharacter.Trans.ShouldTransformPositionBe(10, 10);
         moveHandler.Tick();
