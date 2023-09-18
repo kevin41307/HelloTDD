@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace Game.Scripts.Battle.Misc
 {
-    public interface IDeltaTimeProvider
+    public interface ITimeProvider
     {
         public float GetDeltaTime()
         {
@@ -9,7 +9,7 @@ namespace Game.Scripts.Battle.Misc
         }
     }
 
-    public class DeltaTimeProvider : IDeltaTimeProvider
+    public class TimeProvider : ITimeProvider
     {
         public float GetDeltaTime()
         {

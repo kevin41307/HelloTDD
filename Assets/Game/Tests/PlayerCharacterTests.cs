@@ -36,7 +36,7 @@ public class PlayerCharacterTests : TestFixture_DI_Log
         Debug.Log("Evaluate()" + pauseState.Evaluate());
         */
 
-        var timeProvider = BindMockAndResolve<IDeltaTimeProvider>();
+        var timeProvider = BindMockAndResolve<ITimeProvider>();
         timeProvider.GetDeltaTime().Returns(10);
 
         Container.Bind<PlayerMoveHandler>().AsSingle().WithArguments(playerCharacter);
@@ -72,7 +72,7 @@ public class PlayerCharacterTests : TestFixture_DI_Log
         Debug.Log("Evaluate()" + pauseState.Evaluate());
         */
 
-        var timeProvider = BindMockAndResolve<IDeltaTimeProvider>();
+        var timeProvider = BindMockAndResolve<ITimeProvider>();
         timeProvider.GetDeltaTime().Returns(10);
 
         Container.Bind<PlayerMoveHandler>().AsSingle().WithArguments(playerCharacter);

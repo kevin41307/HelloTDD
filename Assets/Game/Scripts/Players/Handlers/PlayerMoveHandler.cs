@@ -14,7 +14,7 @@ namespace Game.Scripts.Players.Handlers
         }
 
         [Inject] PlayerInputState inputState;
-        [Inject] IDeltaTimeProvider deltaTimeProvider;
+        [Inject] ITimeProvider deltaTimeProvider;
         [Inject] IStateEvaluator GamePause { get; set; }
 
 
