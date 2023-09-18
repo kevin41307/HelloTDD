@@ -12,6 +12,7 @@ namespace Game.Scripts.Players.Handlers
         {
             inputState.SetHorizontal(Input.GetAxisRaw("Horizontal"));
             inputState.SetVertical(Input.GetAxisRaw("Vertical"));
+            inputState.SetPauseBtn(Input.GetButton("Cancel"));
         }
     }
 }

@@ -26,5 +26,10 @@ namespace Game.Scripts.Players.Main
             SetVertical(vertical);
         }
 
+        public void SetPauseBtn(bool active)
+        {
+            isPressPauseBtn = active;
+        }
+
     }
 }
