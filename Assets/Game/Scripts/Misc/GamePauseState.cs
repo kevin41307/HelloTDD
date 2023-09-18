@@ -7,6 +7,7 @@ namespace Game.Scripts.Misc
     {
         [Inject] UserPressPauseAction userPressPauseAction;
 
+
         public void Initialize()
         {
             Setup();

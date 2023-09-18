@@ -8,6 +8,7 @@ namespace Game.Scripts.Misc
     public class UserPressPauseAction : IAction
     {
         [Inject] PlayerInputState inputState;
+
         public bool Act()
         {
             return inputState.isPressPauseBtn;

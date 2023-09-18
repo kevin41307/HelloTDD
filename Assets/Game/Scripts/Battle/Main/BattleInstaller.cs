@@ -1,5 +1,6 @@
 using Game.Scripts.Battle.Misc;
 using Game.Scripts.Players.Handlers;
+using Game.Scripts.Players.Main;
 using Zenject;
 namespace Game.Scripts.Battle.Main
 {
