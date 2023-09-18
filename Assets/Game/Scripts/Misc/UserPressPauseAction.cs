@@ -10,7 +10,6 @@ namespace Game.Scripts.Misc
         [Inject] PlayerInputState inputState;
         public bool Act()
         {
-            Debug.Log("inputState.Horizontal" + inputState.Horizontal);
             return inputState.isPressPauseBtn;
         }
 

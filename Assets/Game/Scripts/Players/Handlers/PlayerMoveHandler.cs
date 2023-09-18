@@ -17,7 +17,8 @@ namespace Game.Scripts.Players.Handlers
 
         [Inject] IDeltaTimeProvider deltaTimeProvider;
 
-        [Inject] GamePauseState GamePauseState { get; set; }
+
+        [Inject] IStateEvaluator GamePause { get; set; }
 
 
         public Vector2 CalMovement()
@@ -29,7 +30,7 @@ namespace Game.Scripts.Players.Handlers
 
         public void Tick()
         {
-            if(GamePauseState.Evaluate()) return;
+            if(GamePause.Evaluate()) return;
             var movement = CalMovement();
             var newPos = mover.GetPos() + movement;
             mover.SetPos( newPos );

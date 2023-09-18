@@ -23,71 +23,54 @@ public class PlayerCharacterTests : TestFixture_DI_Log
         Container.Bind<float>().WithId("MoveSpeed").FromInstance(MoveSpeed);
         var playerCharacter = Container.Resolve<PlayerCharacter>();
 
-        //var GamePauseState = ScriptableObject.CreateInstance<GamePauseState>();
-        //Container.Bind<GamePauseState>().FromInstance(GamePauseState);
         var inputState = BindAndResolve<PlayerInputState>();
         inputState.SetMoveDirection(1, 1);
 
-        IStateEvaluator stateEvaluator = BindMockAndResolve<IStateEvaluator>();
-        stateEvaluator.Evaluate(new List<IAction>()).Returns(true);
-
+        var stateEvaluator = Substitute.For<IStateEvaluator>();
+        Container.BindInstance(stateEvaluator);
+        /*
         var press = BindAndResolve<UserPressPauseAction>();
         var pauseState = BindAndResolve<GamePauseState>();
         pauseState.Setup();
-        pauseState.evaluator = stateEvaluator;
-
         pauseState.actions.ForEach(action => Debug.Log(action) );
         Debug.Log("Evaluate()" + pauseState.Evaluate());
-
-
-        //Container.Bind<GamePauseState>().FromInstance(pauseState);
-
-        var player = playerCharacter.Trans;
-        //playerCharacter.MoveSpeed = 1;
-        //var player = new GameObject().transform;
-        //var mover = BindMockAndResolve<IPlayerMover>();
-        //mover.GetPos().Returns((Vector2)player.transform.position);
-        //mover.MoveSpeed = 1;
+        */
 
         var timeProvider = BindMockAndResolve<IDeltaTimeProvider>();
         timeProvider.GetDeltaTime().Returns(10);
 
-        //Container.Bind<PlayerMoveHandler>().AsSingle().WithArguments(mover);
         Container.Bind<PlayerMoveHandler>().AsSingle().WithArguments(playerCharacter);
         var moveHandler = Container.Resolve<PlayerMoveHandler>();
 
-        //var movement = moveHandler.CalMovement();
-        //Debug.Log("movement" + movement);
-        //mover.When(x => x.SetPos(movement)).Do(x => {player.position += (Vector3)movement; });
+        stateEvaluator.Evaluate().Returns(false);
         moveHandler.Tick();
-        player.ShouldTransformPositionBe(10, 10);
+        playerCharacter.Trans.ShouldTransformPositionBe(10, 10);
         moveHandler.Tick();
-        player.ShouldTransformPositionBe(20, 20);
+        playerCharacter.Trans.ShouldTransformPositionBe(20, 20);
     }
 
     [Test]
-    public void UserPressGamePauseBtn_Then_PlayerCannotMove()
+    public void GamePause_Then_PlayerCannotMove()
     {
         Container.Bind<PlayerCharacter>().FromNewComponentOnNewGameObject().AsSingle();
         float MoveSpeed = 1;
         Container.Bind<float>().WithId("MoveSpeed").FromInstance(MoveSpeed);
         var playerCharacter = Container.Resolve<PlayerCharacter>();
-        var player = playerCharacter.Trans;
 
         var inputState = BindAndResolve<PlayerInputState>();
         inputState.SetMoveDirection(1, 1);
 
-        IStateEvaluator stateEvaluator = BindMockAndResolve<IStateEvaluator>();
+        var stateEvaluator = Substitute.For<IStateEvaluator>();
+        Container.BindInstance(stateEvaluator);
 
+        /*
+        IStateEvaluator stateEvaluator = BindMockAndResolve<IStateEvaluator>();
         var press = BindAndResolve<UserPressPauseAction>();
         var pauseState = BindAndResolve<GamePauseState>();
         pauseState.Setup();
-        pauseState.evaluator = stateEvaluator;
-        stateEvaluator.Evaluate(pauseState.actions).Returns(false);
-    
-
         pauseState.actions.ForEach(action => Debug.Log(action) );
         Debug.Log("Evaluate()" + pauseState.Evaluate());
+        */
 
         var timeProvider = BindMockAndResolve<IDeltaTimeProvider>();
         timeProvider.GetDeltaTime().Returns(10);
@@ -95,26 +78,26 @@ public class PlayerCharacterTests : TestFixture_DI_Log
         Container.Bind<PlayerMoveHandler>().AsSingle().WithArguments(playerCharacter);
         var moveHandler = Container.Resolve<PlayerMoveHandler>();
 
-        player.ShouldTransformPositionBe(0, 0);
+        stateEvaluator.Evaluate().Returns(false);
         moveHandler.Tick();   
-        player.ShouldTransformPositionBe(10, 10);
+        playerCharacter.ShouldTransformPositionBe(10, 10);
 
         moveHandler.Tick();  
         moveHandler.Tick();  
-        player.ShouldTransformPositionBe(30, 30);
+        playerCharacter.ShouldTransformPositionBe(30, 30);
         //GamePause
         
-        stateEvaluator.Evaluate(pauseState.actions).Returns(true);
+        stateEvaluator.Evaluate().Returns(true);
         //inputState.isPressPauseBtn = true;
         moveHandler.Tick();  
         moveHandler.Tick();  
-        player.ShouldTransformPositionBe(30, 30);
+        playerCharacter.ShouldTransformPositionBe(30, 30);
         
         //GamePause
-        stateEvaluator.Evaluate(pauseState.actions).Returns(false);
+        stateEvaluator.Evaluate().Returns(false);
         //inputState.isPressPauseBtn = false;
         moveHandler.Tick();   
-        player.ShouldTransformPositionBe(40, 40);
+        playerCharacter.ShouldTransformPositionBe(40, 40);
 
     }
 }

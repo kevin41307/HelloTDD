@@ -5,17 +5,15 @@ using Zenject;
 
 namespace Game.Scripts.Misc
 {
-    public abstract class BaseState 
+    public abstract class BaseState : IStateEvaluator
     {
         public List<IAction> actions = new List<IAction>();
-
-        [Inject] public IStateEvaluator evaluator {set; get;}
 
         public abstract void Setup();
 
         public bool Evaluate()
         {
-            return evaluator.Evaluate(actions);
+            return Or();
         }
         protected bool Or(bool defaultValue = false)
         {

@@ -1,4 +1,5 @@
-﻿using Game.Scripts.Players.Handlers;
+﻿using Game.Scripts.Misc;
+using Game.Scripts.Players.Handlers;
 using UnityEngine;
 using Zenject;
 
@@ -12,7 +13,6 @@ namespace Game.Scripts.Players.Main
             Container.Bind<PlayerInputState>().AsSingle(); 
             Container.BindInterfacesTo<PlayerInputHandler>().AsSingle();
             Container.BindInterfacesTo<PlayerMoveHandler>().AsSingle().WithArguments(GetComponent<IPlayerMover>());
-                     
             Container.BindExecutionOrder<PlayerInputHandler>(-10000);
         }
     }
